@@ -7,17 +7,11 @@ class ES1vs1:
 	def __init__(self):
 		self.utils = Utils()
 
-	def sphere(self, vector, dim):
-		squares = []
-		for i in range(dim):
-			squares.append(vector[i]**2)
-		return sum(squares)
-
-	def mutation_2d(self, vector, dim):
+	def mutate(self, vector, dim):
 		child = vector[:]
 		i = 0
+		sigma = vector[dim]
 		while i < dim:
-			sigma = vector[dim + i]
 			noise = self.utils.box_muller_transform(sigma)
 			child[i] += noise
 			i += 1
@@ -25,18 +19,15 @@ class ES1vs1:
 
 	def phi(self, num_success, h):
 		ratio = num_success / h
-		alpha = 1
 		if ratio < 0.2:
-			alpha = 0.82
+			return 0.82
 		elif ratio > 0.2:
-			alpha = 1.22
-		return alpha
+			return 1.22
+		return 1
 
 	def one_fifth_rule(self, vector, dim, num_success, h):
 		alpha = self.phi(num_success, h)
-		for i in range(dim, len(vector)):
-			sigma_i = vector[i]
-			vector[i] = alpha * sigma_i
+		vector[dim] *= alpha 
 
 	def run(self, x_0, dim, F, success=False):
 		print("Estrategia Evolutiva 1+1")
@@ -46,7 +37,7 @@ class ES1vs1:
 
 		x_i, fx_i = x_0, F(x_0, dim)
 		while abs(fx_i) > precision:
-			child = self.mutation_2d(x_i, dim)
+			child = self.mutate(x_i, dim)
 			f_child = F(child, dim)
 			if abs(f_child) < abs(fx_i):
 				x_i = child
