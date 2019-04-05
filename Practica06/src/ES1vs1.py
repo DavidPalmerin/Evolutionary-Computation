@@ -9,9 +9,8 @@ class ES1vs1:
 
 	def mutate(self, vector, dim):
 		child = vector[:]
-		i = 0
 		sigma = vector[dim]
-		while i < dim:
+		for i in range(dim):
 			noise = self.utils.box_muller_transform(sigma)
 			child[i] += noise
 			i += 1
@@ -30,13 +29,15 @@ class ES1vs1:
 		vector[dim] *= alpha 
 
 	def run(self, x_0, dim, F, success=False):
-		print("Estrategia Evolutiva 1+1")
+		print("---- Estrategia Evolutiva 1+1 ----")
 		precision = 0.001
 		h, check = 1, dim * 10
 		num_success = 0
 
 		x_i, fx_i = x_0, F(x_0, dim)
-		while abs(fx_i) > precision:
+		counter = 0
+		bound = 10e5
+		while abs(fx_i) > precision and counter < bound:
 			child = self.mutate(x_i, dim)
 			f_child = F(child, dim)
 			if abs(f_child) < abs(fx_i):
@@ -49,8 +50,11 @@ class ES1vs1:
 			if success and h % check == 0:
 				self.one_fifth_rule(x_i, dim, num_success, h)
 				num_success = 0
-			print("\t> F(x_i) = %f" % fx_i)
+			counter += 1
 
+		print("> Usando regla 1/5: %s" % str(success))
+		print("> Número de dimensiones: %d" % dim)
+		print("> Número de iteraciones: %d" % counter)
 		return x_i
 
 

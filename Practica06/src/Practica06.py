@@ -10,7 +10,7 @@ def ejercicio_1():
 	utils = Utils()
 	sigma = 1.0
 	rnd_num = utils.box_muller_transform(sigma)
-	print("Numero aleatorio: %f" % rnd_num)
+	print("Número aleatorio: %f" % rnd_num)
 
 def ejercicio_2():
 	dim = int(input('Número de dimensiones > '))
@@ -21,23 +21,30 @@ def ejercicio_2():
 	x_0 = [-99] * dim
 	x_0.append(1.0)
 	x_f = es.run(x_0, dim, utils.sphere, success)
-	print("¡Optimo encontrado!")
-	print("~ %s" % str(x_f))
-	print("~ F(x_f) = %f" % utils.sphere(x_f, dim))
 
+	print("> x_f = %s" % str(x_f))
+	print("> F(x_f) = %f" % utils.sphere(x_f, dim))
+    
 def ejercicio_3():
 	es = ES_mu_lambda()
 	utils = Utils()
+
+	print("Seleccionar función:")
+	fun_op = int(input('1. Sphere \n2. Ackley \n > '))
 	dim = int(input('Número de dimensiones > '))
-	mu_size = 15
-	lambda_size = 130
-	x_f = es.run(dim, utils.sphere, mu_size, lambda_size)
-	print("F(x_f) = %f" % utils.sphere(x_f, dim))
+	fun = utils.sphere if fun_op == 1 else utils.ackley
+
+	if dim == 2:
+		bound = 5 if fun_op == 1 else 1
+		interval = np.linspace(-bound, bound)
+		utils.graph_contours(fun, interval, interval)
+
+	mu_size = 14
+	lambda_size = 100
+	x_f = es.run(dim, fun, mu_size, lambda_size)
 	
-	file = open('out.txt', 'w')
-	for v in es.values:
-		file.write('%s\n' % str(v))
-	file.close()
+	print("> x_f = %s" % str(x_f))
+	print("> F(x_f) = %f" % fun(x_f, dim))	
 
 if __name__ == '__main__':
 	if len(sys.argv) > 1:
