@@ -64,10 +64,10 @@ class GA:
 			Estos puntos se usan en la operador de recombinacion
 			El resultado es una tupla (p1, p2) donde p1 < p2
 		'''
-		pivot_1 = rnd.randint(0, self.GENOME_LENGTH - 1)
-		pivot_2 = rnd.randint(0, self.GENOME_LENGTH)
-		while pivot_2 == pivot_1 or abs(pivot_1 - pivot_2) == self.GENOME_LENGTH:
-			pivot_2 = rnd.randint(0, self.GENOME_LENGTH)
+		pivot_1 = rnd.randint(0, self.GENOME_LENGTH - 2)
+		pivot_2 = rnd.randint(0, self.GENOME_LENGTH - 1)
+		while pivot_2 == pivot_1 or abs(pivot_1 - pivot_2) == self.GENOME_LENGTH - 1:
+			pivot_2 = rnd.randint(0, self.GENOME_LENGTH - 1)
 		return (pivot_1, pivot_2) if pivot_1 < pivot_2 else (pivot_2, pivot_1)
 
 	def mutation(self, genome):
