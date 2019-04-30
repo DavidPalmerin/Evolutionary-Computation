@@ -58,6 +58,7 @@ class GeneticLayout:
                 i = rnd.randint(0, len(layout.alphabet) - 1)
                 letter2 = layout.alphabet[i]
                 layout.mutate(letter1, letter2)
+        layout.update_fitness()
 
     '''
         Próximas funciones son para selección de padres y

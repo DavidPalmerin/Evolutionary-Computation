@@ -9,7 +9,8 @@ class Layout:
                  design=utils_empty_design(10,3),
                  alphabet=spanish_alphabet(),
                  monograms_file='data/spanish-monograms',
-                 bigrams_file='data/spanish-bigrams'):
+                 bigrams_file='data/spanish-bigrams',
+                 evaluate=True):
         self.rows = 3
         self.cols = 10
         self.alphabet = alphabet
@@ -21,6 +22,9 @@ class Layout:
         self.bigrams = utils_load_ngrams(bigrams_file)
         self.load_distribution = utils_load_distribution()
         self.coefficients = utils_weight_coefficients()
+        if evaluate: self.fitness = self.eval()
+
+    def update_fitness(self):
         self.fitness = self.eval()
 
     def eval(self):
@@ -45,7 +49,8 @@ class Layout:
         keys_left = other.__keys_complement__(new_dict)
         self.__complete_keyboard__(new_dict, new_design, keys_left)
         return Layout(coordinates=new_dict,
-                      design=new_design)
+                      design=new_design,
+                      evaluate=False)
 
     def mutate(self, letter1, letter2):
         [h1,x1,y1] = self.coordinates[letter1]
@@ -70,9 +75,6 @@ class Layout:
         return positions
 
     def copy(self):
-        coordinates = self.coordinates
-        design = self.design
-        alphabet = self.alphabet
         return Layout(self.coordinates.copy(),
                       self.design[:],
                       self.alphabet[:])
