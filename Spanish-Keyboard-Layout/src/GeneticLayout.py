@@ -2,14 +2,16 @@ from Layout import *
 
 class GeneticLayout:
 
-    def __init__(self, num_generations=100,
-                 population_size=100):
+    def __init__(self,
+                 num_generations=100,
+                 population_size=100,
+                 rmb_prob=0.85,
+                 mtn_prob=0.10):
         self.GENERATIONS = num_generations
         self.POPULATION  = population_size
         self.OFFSPRING_BOUND = int(population_size * 0.75)
-        self.MTN_PROB = 0.10
-        self.RMB_PROB = 0.85
-
+        self.MTN_PROB = mtn_prob
+        self.RMB_PROB = rmb_prob
         self.generation = self.random_population()
         self.best = self.best_individual()
 
@@ -111,8 +113,36 @@ class GeneticLayout:
 
 
 if __name__ == '__main__':
-    gl = GeneticLayout()
-    pop = gl.random_population()
+    '''
+        GeneticLayout(num_generations=100,
+                 population_size=100,
+                 rmb_prob=0.85,
+                 mtn_prob=0.10):
+    '''
+    num_generations = 100
+    population_size = 100
+    rmb_prob = 0.85
+    mtn_prob = 0.10
+    if len(sys.argv) == 5:
+        num_generations = int(sys.argv[1])
+        population_size = int(sys.argv[2])
+        rmb_prob = float(sys.argv[3])
+        mtn_prob= float(sys.argv[4])
+    elif len(sys.argv) > 1 and len(sys.argv) < 5:
+        print("Formato de uso: \n\t python3 GeneticLayout.py")
+        print("\t python3 GeneticLayout.py num_generations population_size recombination_prob mutation_prob")
+        print("Ejemplo de uso:\n\t python3 GeneticLayout.py")
+        print("\t python3 GeneticLayout 100 100 0.85 0.10")
+        sys.exit()
+
+    gl = GeneticLayout(num_generations, population_size, rmb_prob, mtn_prob)
     best = gl.evolve()
+    qwerty_array, qwerty_dict = utils_querty_keyboard()
+    qwerty_keyboard = Layout(qwerty_dict, qwerty_array)
+    print("\nTeclado genético:")
+    print("\t%d generaciones, %d individuos" % (gl.GENERATIONS, gl.POPULATION))
+    print("\t%d offspring, %d padres" % (gl.OFFSPRING_BOUND, gl.POPULATION - gl.OFFSPRING_BOUND))
+    print("\t%.2f recombinación, %.2f mutación\n" % (gl.RMB_PROB, gl.MTN_PROB))
     print(best)
+    print(qwerty_keyboard)
 

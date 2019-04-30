@@ -3,6 +3,24 @@ def spanish_alphabet():
     alphabet.append('Ñ')
     return alphabet
 
+def utils_querty_keyboard():
+    qwerty_array = [['Q','W','E','R','T','Y','U','I','O','P'],
+                    ['A','S','D','F','G','H','J','K','L','Ñ'],
+                    ['Z','X','C','V','B','N','M',' ',' ', ' ']]
+
+    qwerty_coordinates = utils_to_dictionary(qwerty_array)
+    return qwerty_array, qwerty_coordinates
+
+def utils_to_dictionary(array):
+    dictionary = {}
+    for row in range(len(array)):
+        for col in range(len(array[0])):
+            key = array[row][col]
+            if key != ' ':
+                h = 0 if col < len(array[0]) / 2 else 1
+                dictionary.update({key : [h,row,col]})
+    return dictionary
+
 def utils_empty_design(rows, cols):
     design = [[" " for i in range(cols)]
                    for j in range(rows)]
@@ -79,6 +97,7 @@ def utils_load_distribution():
     return distribution
 
 if __name__ == '__main__':
+    print(len(spanish_alphabet()))
     bigrams = utils_load_ngrams('data/spanish-bigrams')
     for k in bigrams:
         print("%s %s" % (k, bigrams[k]))
